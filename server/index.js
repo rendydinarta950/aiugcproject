@@ -6,9 +6,13 @@ const apiRoutes = require('./routes/api');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Middleware
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:3000'] }));
+const corsOptions = isProduction
+  ? {} // Same origin in production, no CORS needed
+  : { origin: ['http://localhost:5173', 'http://localhost:3000'] };
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -23,8 +27,18 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Serve React frontend in production
+if (isProduction) {
+  const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientBuildPath));
+  // Fallback: semua route non-API diarahkan ke React (untuk React Router)
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
+
 app.listen(PORT, () => {
-  console.log(`\n🚀 NyarProject API Server running on http://localhost:${PORT}`);
+  console.log(`\n🚀 NyarProject API Server running on port ${PORT}`);
   console.log(`📊 Dashboard API: http://localhost:${PORT}/api/dashboard`);
   console.log(`🔬 Health Check: http://localhost:${PORT}/health\n`);
 });
