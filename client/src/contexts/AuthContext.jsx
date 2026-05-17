@@ -5,7 +5,7 @@ const AuthContext = createContext(null);
 // Simple credential check — replace with real API call if needed
 const VALID_USERS = [
   { username: 'admin', password: 'nyarai2024', role: 'admin', name: 'Admin' },
-  { username: 'editor', password: 'editor123', role: 'editor', name: 'Editor' },
+  { username: 'editor', password: 'NyarJago123!', role: 'editor', name: 'Editor' },
 ];
 
 export function AuthProvider({ children }) {
