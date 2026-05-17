@@ -1,8 +1,50 @@
+# ── Dependencies ──────────────────────────────
 node_modules/
+.pnp
+.pnp.js
+
+# ── Environment / Secrets ─────────────────────
 .env
-output/
+.env.*
+!.env.example
+
+# ── Database ──────────────────────────────────
 *.db
 *.db-shm
 *.db-wal
+*.sqlite
+*.sqlite3
+
+# ── Build output ──────────────────────────────
 dist/
+build/
+client/dist/
+
+# ── Generated content ─────────────────────────
+output/
+
+# ── Logs & debug files ────────────────────────
+*.log
+*.txt
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS files ──────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+
+# ── Editor / IDE ──────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Temp & misc ───────────────────────────────
+.cache/
+tmp/
+temp/
