@@ -1,0 +1,14 @@
+/*
+ * index.css — Entry point / orchestrator
+ *
+ * Separation of concerns:
+ *   variables.css  → Design tokens (colors, shadows, radius, spacing)
+ *   layout.css     → App shell, sidebar, main-content, page structure
+ *   components.css → Reusable UI atoms (buttons, cards, forms, modals…)
+ *
+ * Do NOT add styles here. Add them to the appropriate file above.
+ */
+
+@import './variables.css';
+@import './layout.css';
+@import './components.css';

@@ -1,0 +1,59 @@
+/* ============================================
+   variables.css — Design tokens & CSS custom properties
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand */
+  --brand:           #6B83EF;
+  --brand-light:     #8FA3FF;
+  --brand-lighter:   #EBF0FF;
+  --brand-dark:      #4A62D8;
+
+  /* Backgrounds */
+  --bg-page:         #F0F3FC;
+  --bg-white:        #FFFFFF;
+  --bg-subtle:       #F8F9FE;
+  --bg-hover:        #EDF0FB;
+
+  /* Text */
+  --text-heading:    #0F0E17;
+  --text-body:       #2D3250;
+  --text-secondary:  #595F7A;
+  --text-muted:      #9095B2;
+  --text-inverse:    #FFFFFF;
+
+  /* Borders */
+  --border:          #E2E5F0;
+  --border-active:   #6B83EF;
+  --border-strong:   #C5CADF;
+
+  /* Semantic accents */
+  --accent-green:    #10B981;  --accent-green-bg:  #ECFDF5;
+  --accent-amber:    #F59E0B;  --accent-amber-bg:  #FFFBEB;
+  --accent-red:      #EF4444;  --accent-red-bg:    #FEF2F2;
+  --accent-purple:   #8B5CF6;  --accent-purple-bg: #F5F3FF;
+  --accent-cyan:     #06B6D4;  --accent-cyan-bg:   #ECFEFF;
+
+  /* Shadows */
+  --shadow-xs:    0 1px 3px rgba(15,14,23,.06), 0 1px 2px rgba(15,14,23,.04);
+  --shadow-sm:    0 2px 8px rgba(15,14,23,.08), 0 1px 3px rgba(15,14,23,.04);
+  --shadow-md:    0 4px 16px rgba(15,14,23,.10), 0 2px 6px rgba(15,14,23,.06);
+  --shadow-lg:    0 8px 32px rgba(15,14,23,.12), 0 4px 12px rgba(15,14,23,.08);
+  --shadow-brand: 0 0 0 1.5px #6B83EF, 0 4px 12px rgba(107,131,239,.25);
+
+  /* Radius */
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   18px;
+  --radius-xl:   24px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --sidebar-w:   256px;
+
+  /* Motion */
+  --ease: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
