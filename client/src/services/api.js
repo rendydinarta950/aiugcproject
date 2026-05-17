@@ -1,10 +1,28 @@
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
+function getToken() {
+  return localStorage.getItem('nyarai_token');
+}
+
 async function request(url, options = {}) {
+  const token = getToken();
   const res = await fetch(`${BASE_URL}${url}`, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
     ...options,
   });
+
+  // Auto-logout on 401 (expired/invalid token)
+  if (res.status === 401) {
+    localStorage.removeItem('nyarai_token');
+    localStorage.removeItem('nyarai_user');
+    window.location.href = '/';
+    return;
+  }
+
   const data = await res.json();
   if (!data.success) throw new Error(data.error || 'Request failed');
   return data.data;

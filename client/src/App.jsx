@@ -13,8 +13,17 @@ import Schedule from './pages/Schedule';
 import './styles/index.css';
 
 function AppShell() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+
+  // Verifying JWT token on mount
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg-page)' }}>
+        <div className="spinner" style={{ width: 32, height: 32, borderWidth: 3 }} />
+      </div>
+    );
+  }
 
   if (!user) return <Login />;
 

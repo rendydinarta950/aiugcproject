@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const apiRoutes = require('./routes/api');
+const authRoutes = require('./routes/auth');
+const { authMiddleware } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,13 +18,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files for generated videos
+// Static files for generated videos/images
 app.use('/output', express.static(path.join(__dirname, '..', 'output')));
 
-// API Routes
-app.use('/api', apiRoutes);
+// ─── Auth routes (PUBLIC — no token needed) ──────────────────────────────────
+app.use('/api/auth', authRoutes);
 
-// Health check
+// ─── All other API routes PROTECTED by JWT ───────────────────────────────────
+app.use('/api', authMiddleware, apiRoutes);
+
+// Health check (public)
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -39,6 +44,6 @@ if (isProduction) {
 
 app.listen(PORT, () => {
   console.log(`\n🚀 NyarProject API Server running on port ${PORT}`);
-  console.log(`📊 Dashboard API: http://localhost:${PORT}/api/dashboard`);
-  console.log(`🔬 Health Check: http://localhost:${PORT}/health\n`);
+  console.log(`🔐 Auth: POST /api/auth/login`);
+  console.log(`🔬 Health: http://localhost:${PORT}/health\n`);
 });

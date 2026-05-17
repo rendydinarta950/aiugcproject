@@ -1,5 +1,6 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const DB_PATH = path.join(__dirname, '..', '..', 'nyar.db');
 
@@ -17,6 +18,16 @@ function getDb() {
 
 function initTables() {
   db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      role TEXT DEFAULT 'editor',
+      name TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      last_login DATETIME
+    );
+
     CREATE TABLE IF NOT EXISTS niches (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -70,6 +81,19 @@ function initTables() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  // Seed default users (only if table is empty)
+  const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
+  if (userCount.count === 0) {
+    const insertUser = db.prepare('INSERT INTO users (username, password_hash, role, name) VALUES (?, ?, ?, ?)');
+    // Read passwords from env, fallback to defaults
+    const adminPassword = process.env.ADMIN_PASSWORD || 'nyarai2024';
+    const editorPassword = process.env.EDITOR_PASSWORD || 'NyarJago123!';
+
+    insertUser.run('admin', bcrypt.hashSync(adminPassword, 12), 'admin', 'Admin');
+    insertUser.run('editor', bcrypt.hashSync(editorPassword, 12), 'editor', 'Editor');
+    console.log('✅ Default users seeded (admin & editor)');
+  }
 
   // Insert default settings if not exist
   const insertSetting = db.prepare(`INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)`);
