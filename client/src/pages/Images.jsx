@@ -76,7 +76,7 @@ export default function Images() {
     setGeneratingPrompt(true);
     try {
       const sizeTag = SIZES.find(s => s.id === selectedSize)?.tag || '9:16 vertical';
-      const res = await fetch('http://localhost:3001/api/images/generate-prompt', {
+      const res = await fetch('/api/images/generate-prompt', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idea: ideaInput, size: sizeTag }),
@@ -252,7 +252,7 @@ export default function Images() {
             </div>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               <img
-                src={`http://localhost:3001/output/images/${lastGenerated.filename}`}
+                src={`/output/images/${lastGenerated.filename}`}
                 alt="Generated"
                 style={{ width: 130, aspectRatio: selectedSize === '9:16' ? '9/16' : selectedSize === '1:1' ? '1/1' : '16/9', objectFit: 'cover', borderRadius: 'var(--radius-md)', cursor: 'pointer', border: '1px solid var(--border)' }}
                 onClick={() => setPreviewImg(lastGenerated)}
@@ -287,7 +287,7 @@ export default function Images() {
               <div key={img.filename} className="card animate-in" style={{ padding: 10, animationDelay: `${i * 0.02}s` }}>
                 <div style={{ position: 'relative' }}>
                   <img
-                    src={`http://localhost:3001/output/images/${img.filename}`}
+                    src={`/output/images/${img.filename}`}
                     alt={img.filename}
                     style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 'var(--radius-sm)', cursor: 'pointer', border: '1px solid var(--border)', display: 'block' }}
                     onClick={() => setPreviewImg(img)}
@@ -304,7 +304,7 @@ export default function Images() {
                   <span>{(img.fileSize / 1024).toFixed(0)} KB</span>
                   <span>{new Date(img.created_at).toLocaleDateString('en')}</span>
                 </div>
-                <a href={`http://localhost:3001/output/images/${img.filename}`} download={img.filename}
+                <a href={`/output/images/${img.filename}`} download={img.filename}
                   className="btn btn-secondary btn-sm" style={{ width: '100%', marginTop: 8, justifyContent: 'center' }}>
                   Download
                 </a>
@@ -321,14 +321,14 @@ export default function Images() {
             <div className="modal-header">
               <h2>Image Preview</h2>
               <div style={{ display: 'flex', gap: 8 }}>
-                <a href={`http://localhost:3001/output/images/${previewImg.filename}`} download={previewImg.filename} className="btn btn-secondary btn-sm">Download</a>
+                <a href={`/output/images/${previewImg.filename}`} download={previewImg.filename} className="btn btn-secondary btn-sm">Download</a>
                 <button className="btn btn-ghost" onClick={() => setPreviewImg(null)}>
                   <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg>
                 </button>
               </div>
             </div>
             <div style={{ padding: '16px 24px 24px', overflowY: 'auto' }}>
-              <img src={`http://localhost:3001/output/images/${previewImg.filename}`} alt="Preview"
+              <img src={`/output/images/${previewImg.filename}`} alt="Preview"
                 style={{ width: '100%', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', display: 'block' }} />
               {/* Image metadata */}
               <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
