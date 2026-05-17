@@ -70,25 +70,21 @@ class ImageService {
 
     const systemPrompt = `Kamu adalah AI prompt engineer expert untuk image generation. 
 Tugasmu: buat satu image generation prompt yang sangat detail dan optimal untuk Imagen AI.
+PENTING: Gunakan TEPAT subject/objek yang disebutkan user. Jangan ganti atau tambah subject lain yang tidak diminta.
 Output: HANYA text prompt dalam Bahasa Inggris, maksimal 150 kata, tanpa penjelasan tambahan.`;
 
-    const userPrompt = `Buat image prompt untuk konten UGC social media dengan detail berikut:
-- Judul Konten: ${idea.title}
-- Hook: ${idea.hook}
-- Niche: ${niche.name}
-- Platform: ${niche.platform || 'TikTok'}
-- Style Target: ${styleDesc}
+    const userPrompt = `Buat image generation prompt berdasarkan ide berikut:
+- Ide/Subject: ${idea.title}${idea.hook && idea.hook !== idea.title ? `\n- Detail tambahan: ${idea.hook}` : ''}
+- Style visual: ${styleDesc}
 
-Kriteria prompt:
-- Foto realistik seperti foto orang asli, BUKAN ilustrasi atau kartun
-- Subject: Indonesian woman/person yang relatable (bukan model sempurna)
-- Setting yang relevan dengan niche "${niche.name}"
-- Lighting: natural, soft, indoor/outdoor sesuai konten
-- Angle: eye-level atau slight high angle untuk UGC feel
-- Include: relevant props/products sesuai niche
-- Mood: authentic, candid, engaging
+Kriteria:
+- WAJIB: subject utama harus PERSIS sesuai ide di atas (jangan tambah orang/manusia jika tidak disebutkan)
+- Foto realistik, bukan ilustrasi atau kartun
+- Lighting: natural, soft, cinematic
+- Angle: eye-level atau sesuai subject
+- Mood: authentic, engaging, high quality
 
-Tambahkan technical tags: photorealistic, ${size}, DSLR quality, bokeh background, sharp focus on subject`;
+Tambahkan technical tags: photorealistic, ${size}, DSLR quality, sharp focus on subject`;
 
     const response = await this.callAPI('/chat/completions', {
       model: this.textModel,
