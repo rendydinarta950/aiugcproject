@@ -193,11 +193,46 @@ Tambahkan technical tags: photorealistic, ${size}, DSLR quality, sharp focus on 
 
   /**
    * Quick generate from raw prompt only (for manual UI input)
+   * Auto-translates to English if input is not in English
    */
   async generateFromPrompt(rawPrompt, label = 'manual') {
     console.log(`🎨 Quick generate: "${rawPrompt.substring(0, 50)}..."`);
-    const result = await this.renderImage(rawPrompt);
-    return { ...result, prompt: rawPrompt, label };
+
+    // Auto-translate if prompt contains non-English characters or Indonesian words
+    let finalPrompt = rawPrompt;
+    const indonesianPattern = /\b(yang|dan|ini|itu|dengan|untuk|dari|tidak|ada|jangan|harus|juga|sangat|lebih|bukan|atau|kucing|gemuk|makan|realistis|muka|lidah|mimik|kakinya|perhatikan|megangnya)\b/i;
+    if (indonesianPattern.test(rawPrompt)) {
+      console.log('🌐 Non-English prompt detected, translating...');
+      try {
+        const translateResponse = await this.callAPI('/chat/completions', {
+          model: this.textModel,
+          messages: [
+            {
+              role: 'system',
+              content: `You are a prompt translator for image generation AI. 
+Translate the user's prompt into a clean, detailed English image generation prompt.
+CRITICAL RULES:
+- Keep ALL subjects/objects exactly as described (if user says cat, keep it as cat - don't add humans)
+- Convert any negative instructions (jangan/don't) into positive framing instead (e.g. "only the cat, no humans")
+- Make it photorealistic and detailed
+- Output ONLY the English prompt, no explanations`,
+            },
+            { role: 'user', content: rawPrompt },
+          ],
+          max_tokens: 200,
+          temperature: 0.3,
+        });
+        if (translateResponse.choices?.[0]?.message?.content) {
+          finalPrompt = translateResponse.choices[0].message.content.trim();
+          console.log(`✅ Translated: ${finalPrompt.substring(0, 80)}...`);
+        }
+      } catch (err) {
+        console.warn('Translation failed, using original prompt:', err.message);
+      }
+    }
+
+    const result = await this.renderImage(finalPrompt);
+    return { ...result, prompt: finalPrompt, originalPrompt: rawPrompt !== finalPrompt ? rawPrompt : undefined, label };
   }
 }
 
