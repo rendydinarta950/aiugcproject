@@ -76,14 +76,9 @@ export default function Images() {
     setGeneratingPrompt(true);
     try {
       const sizeTag = SIZES.find(s => s.id === selectedSize)?.tag || '9:16 vertical';
-      const res = await fetch('/api/images/generate-prompt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea: ideaInput, size: sizeTag }),
-      });
-      const data = await res.json();
-      if (data.success) setCustomPrompt(data.prompt);
-      else throw new Error(data.error);
+      const data = await api.buildPrompt(ideaInput, sizeTag);
+      if (data?.prompt) setCustomPrompt(data.prompt);
+      else throw new Error('No prompt returned');
     } catch (err) { alert('Prompt generation failed: ' + err.message); }
     finally { setGeneratingPrompt(false); }
   }

@@ -75,6 +75,8 @@ export const api = {
     request(`/scheduler/trigger/${nicheId}`, { method: 'POST' }),
 
   // Image Generation
+  buildPrompt: (idea, size) =>
+    request('/images/generate-prompt', { method: 'POST', body: JSON.stringify({ idea, size }) }),
   getImages: () => request('/images'),
   generateImage: (contentId, style) =>
     request('/images/generate', { method: 'POST', body: JSON.stringify({ content_id: contentId, style }) }),

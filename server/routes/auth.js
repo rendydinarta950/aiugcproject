@@ -49,9 +49,18 @@ router.post('/login', async (req, res) => {
 });
 
 // GET /api/auth/me — verify current token and return user info
-router.get('/me', (req, res) => {
-  // req.user is populated by authMiddleware in index.js
-  res.json({ success: true, data: req.user });
+router.get('/me', (req, res, next) => {
+  // Apply auth check inline since this route is under the public /api/auth prefix
+  const jwt = require('jsonwebtoken');
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ success: false, error: 'No token' });
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({ success: true, data: decoded });
+  } catch {
+    res.status(401).json({ success: false, error: 'Invalid or expired token' });
+  }
 });
 
 module.exports = router;

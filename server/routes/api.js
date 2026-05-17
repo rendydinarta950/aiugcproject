@@ -284,7 +284,7 @@ router.post('/images/generate-prompt', async (req, res) => {
       'ugc',
       size,
     );
-    res.json({ success: true, prompt });
+    res.json({ success: true, data: { prompt } });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
